@@ -13,8 +13,7 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 public class DuckActionFlyTest extends TestNGCitrusSpringSupport {
-    @Test(description = "ACTIVE")
-
+    @Test(description = "Проверить полет уточки с активными крыльями")
     @CitrusTest
     public void testFlyActive(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,
@@ -24,8 +23,7 @@ public class DuckActionFlyTest extends TestNGCitrusSpringSupport {
                         "}");
     }
 
-    @Test(description = "FIXED")
-
+    @Test(description = "Проверить полет уточки со связанными крыльями")
     @CitrusTest
     public void testFlyFixed(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,
@@ -35,7 +33,7 @@ public class DuckActionFlyTest extends TestNGCitrusSpringSupport {
                         "}");
     }
 
-    @Test(description = "UNDEFINED")
+    @Test(description = "Проверить полет уточки с неопределенными крыльями")
     @CitrusTest
     public void testFlyUndefined(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,

@@ -14,10 +14,17 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 public class DuckActionQuackTest extends TestNGCitrusSpringSupport {
 
-    @Test(description = "QUACK ODD CORRECT SOUND")
+    @Test(description = "Проверить крякание уточки с нечетным ID и корректным звуком")
     @CitrusTest
     public void testOddCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {
-        duckQuackWithTestData(runner, DuckTestUtils.CheckEvenOdd.CheckOdd, 2, 2,
+        duckQuackWithTestData(runner, DuckTestUtils.CheckEvenOdd.CheckOdd, 2, 3,
+                "yellow", 0.15, "wood", "quack", "FIXED");
+    }
+
+    @Test(description = "Проверить крякание уточки с четным ID и корректным звуком")
+    @CitrusTest
+    public void testEvenCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {
+        duckQuackWithTestData(runner, DuckTestUtils.CheckEvenOdd.CheckEven, 2, 3,
                 "yellow", 0.15, "wood", "quack", "FIXED");
     }
 
@@ -35,7 +42,7 @@ public class DuckActionQuackTest extends TestNGCitrusSpringSupport {
                     color, height, material, sound, wingsState));
         }
 
-        duckQuack(runner, DuckTestUtils.duckId(), repetitionCount, soundCount);
+        duckQuack(runner, DuckTestUtils.duckId(), Integer.toString(repetitionCount), Integer.toString(soundCount));
         StringBuilder expectedSound = new StringBuilder();
         String quack = "quack";
         for(int i = 0; i < repetitionCount; i++) {
@@ -46,7 +53,7 @@ public class DuckActionQuackTest extends TestNGCitrusSpringSupport {
                 }
             }
             if(i < repetitionCount - 1) {
-                expectedSound.append(",");
+                expectedSound.append(", ");
             }
         }
 
