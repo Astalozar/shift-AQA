@@ -10,25 +10,38 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 public class DuckTestUtils {
 
+    /**
+     * Определяет, требуется ли проверка на четность-нечетность id.
+     */
     public enum CheckEvenOdd {
         NoCheck,
         CheckEven,
         CheckOdd
     }
-    private static final String serverUrl = "http://localhost:2222";
 
+    private static final String serverUrl = "http://localhost:2222";
     public static String getServerUrl() {
         return serverUrl;
     }
 
     private static final String duckIdTestVariableName ="duckId";
+
+    /**
+     * @return имя тестовой переменной, в которой хранится id последней созданной тестовой уточки.
+     */
     public static String duckIdVarName() {
         return duckIdTestVariableName;
     }
+    /**
+     * @return форматированная тестовая переменная, в которой хранится id последней созданной тестовой уточки.
+     */
     public static String duckId() {
         return "${" + duckIdTestVariableName +"}";
     }
 
+    /**
+     * Создать тестовую уточку с указанными параметрами и занести её id в укаазанную тестовую переменную.
+     */
     public static void createDuckTestData(TestCaseRunner runner, String duckIdVarName,
                                           String color, double height, String material, String sound, String wingsState) {
         runner.$(http().client(getServerUrl())
@@ -49,6 +62,10 @@ public class DuckTestUtils {
                 .extract(fromBody().expression("$.id", duckIdVarName)));
     }
 
+    /**
+     * Пересоздать тестовую уточку с указанными параметрами, если ее id не проходит проверку на четность-нечетность
+     * по переданному параметру checkEvenOdd.
+     */
     public static void recreateDuckTestData(TestCaseRunner runner, TestContext context, CheckEvenOdd checkEvenOdd,
                                             String color, double height, String material, String sound, String wingsState) {
         try {
@@ -64,6 +81,9 @@ public class DuckTestUtils {
         }
     }
 
+    /**
+     * Удалить тестовые данные уточки с id, хранящимся в указанной тестовой переменной.
+     */
     public static void removeDuckTestData(TestCaseRunner runner, String duckIdVarName) {
         runner.$(http().client(getServerUrl())
                 .send()
@@ -76,6 +96,9 @@ public class DuckTestUtils {
                 .message());
     }
 
+    /**
+     * Провести валидацию ответа по указанным коду ответа и телу сообщения.
+     */
      public static void validateResponse(TestCaseRunner runner, HttpStatus status, String responseMessage) {
         runner.$(http().client(getServerUrl())
                 .receive()

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
