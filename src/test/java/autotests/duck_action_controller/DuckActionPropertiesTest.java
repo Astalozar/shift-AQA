@@ -16,20 +16,20 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 public class DuckActionPropertiesTest extends TestNGCitrusSpringSupport{
     @Test(description = "Проверить получение свойств деревянной уточки с целым четным ID")
     @CitrusTest
-    public void successfulEvenWoodProperties(@Optional @CitrusResource TestCaseRunner runner) {
-        successfulProperties(runner, DuckTestUtils.CheckEvenOdd.CheckEven,
+    public void testEvenWoodProperties(@Optional @CitrusResource TestCaseRunner runner) {
+        duckPropertiesWithTestData(runner, DuckTestUtils.CheckEvenOdd.CheckEven,
                 "yellow", 0.15, "wood", "quack", "FIXED");
     }
 
     @Test(description = "Проверить получение свойств резиновой уточки с целым нечетным ID")
     @CitrusTest
-    public void successfulOddRubberProperties(@Optional @CitrusResource TestCaseRunner runner) {
-        successfulProperties(runner, DuckTestUtils.CheckEvenOdd.CheckOdd,
+    public void testOddRubberProperties(@Optional @CitrusResource TestCaseRunner runner) {
+        duckPropertiesWithTestData(runner, DuckTestUtils.CheckEvenOdd.CheckOdd,
                 "yellow", 0.15, "rubber", "quack", "FIXED");
     }
 
-    public void successfulProperties(TestCaseRunner runner, DuckTestUtils.CheckEvenOdd evenOdd,
-                                     String color, double height, String material, String sound, String wingsState) {
+    public void duckPropertiesWithTestData(TestCaseRunner runner, DuckTestUtils.CheckEvenOdd evenOdd,
+                                           String color, double height, String material, String sound, String wingsState) {
         runner.$(doFinally().actions(
                 context -> DuckTestUtils.removeDuckTestData(runner, DuckTestUtils.duckId())));
 
