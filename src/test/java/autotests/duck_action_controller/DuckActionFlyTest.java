@@ -13,32 +13,34 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 public class DuckActionFlyTest extends TestNGCitrusSpringSupport {
-    @Test(description = "????????? ????? ?????? ? ????????? ????????")
+    @Test(description = "ACTIVE")
+
     @CitrusTest
     public void testFlyActive(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,
                 "yellow", 0.15, "wood", "quack", "ACTIVE",
-                HttpStatus.OK,"{\n" +
+                HttpStatus.OK, "{\n" +
                         "  \"message\": \"I am flying\",\n" +
                         "}");
     }
 
-    @Test(description = "????????? ????? ?????? ?? ?????????? ????????")
+    @Test(description = "FIXED")
+
     @CitrusTest
     public void testFlyFixed(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,
                 "yellow", 0.15, "wood", "quack", "FIXED",
-                HttpStatus.OK,"{\n" +
+                HttpStatus.OK, "{\n" +
                         "  \"message\": \"I can not fly\",\n" +
                         "}");
     }
 
-    @Test(description = "????????? ????? ?????? ? ??????????????? ????????")
+    @Test(description = "UNDEFINED")
     @CitrusTest
     public void testFlyUndefined(@Optional @CitrusResource TestCaseRunner runner) {
         duckFlyWithTestData(runner,
                 "yellow", 0.15, "wood", "quack", "UNDEFINED",
-                HttpStatus.INTERNAL_SERVER_ERROR,"{\n" +
+                HttpStatus.INTERNAL_SERVER_ERROR, "{\n" +
                         "  \"message\": \"I can not fly\",\n" +
                         "}");
     }
