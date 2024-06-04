@@ -81,6 +81,7 @@ public class DuckTestUtils {
                 .receive()
                 .response(status)
                 .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE).body(responseMessage));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(responseMessage));
     }
 }
