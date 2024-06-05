@@ -16,7 +16,7 @@ public class DuckActionSwimTest  extends DuckActionsTest {
     @CitrusTest
     public void testSwimExisting(@Optional @CitrusResource TestCaseRunner runner) {
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", 0.15, "wood", "quack", "ACTIVE");
@@ -32,7 +32,7 @@ public class DuckActionSwimTest  extends DuckActionsTest {
     public void testSwimNonExisting(@Optional @CitrusResource TestCaseRunner runner) {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", 0.15, "wood", "quack", "ACTIVE");
-        removeDuckTestData(runner, duckId());
+        removeDuckTestData(runner);
         duckSwim(runner, duckId());
 
         validateResponse(runner, HttpStatus.NOT_FOUND,

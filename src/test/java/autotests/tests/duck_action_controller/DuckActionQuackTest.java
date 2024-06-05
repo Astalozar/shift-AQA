@@ -4,7 +4,6 @@ import autotests.DuckActionsTest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
@@ -21,7 +20,7 @@ public class DuckActionQuackTest extends DuckActionsTest {
         int soundCount = 3;
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckOdd,
                 "yellow", 0.15, "wood", "quack", "FIXED");
@@ -42,7 +41,7 @@ public class DuckActionQuackTest extends DuckActionsTest {
         int soundCount = 3;
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
                 "yellow", 0.15, "wood", "quack", "FIXED");

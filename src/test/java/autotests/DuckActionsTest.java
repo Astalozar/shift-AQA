@@ -1,7 +1,6 @@
 package autotests;
 
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,17 +46,13 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
      */
     protected void createDuckTestData(TestCaseRunner runner, CheckEvenOdd checkEvenOdd,
                                           String color, double height, String material, String sound, String wingsState) {
+        String payload = generateDuckJson(color, height, material, sound, wingsState);
         runner.$(http().client(getServerUrl())
                 .send()
                 .post("/api/duck/create")
                 .message()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\n" + "  \"color\": \"" + color + "\",\n"
-                        + "  \"height\": " + height + ",\n"
-                        + "  \"material\": \"" + material + "\",\n"
-                        + "  \"sound\": \"" + sound + "\",\n"
-                        + "  \"wingsState\": \"" + wingsState
-                        + "\"\n" + "}"));
+                .body(payload));
         runner.$(http().client(getServerUrl())
                 .receive()
                 .response(HttpStatus.OK)
@@ -71,7 +66,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
 
                 if(checkEvenOdd == CheckEvenOdd.CheckEven && duckId.get() % 2 != 0 ||
                         checkEvenOdd == CheckEvenOdd.CheckOdd && duckId.get() % 2 == 0) {
-                    removeDuckTestData(runner, duckId());
+                    removeDuckTestData(runner);
                     createDuckTestData(runner, checkEvenOdd, color, height, material, sound, wingsState);
                 }
             }
@@ -84,7 +79,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
     /**
      * Удалить тестовые данные уточки с id, хранящимся в указанной тестовой переменной.
      */
-    protected void removeDuckTestData(TestCaseRunner runner, String duckIdVarName) {
+    protected void removeDuckTestData(TestCaseRunner runner) {
         runner.$(http().client(getServerUrl())
                 .send()
                 .delete("/api/duck/delete")

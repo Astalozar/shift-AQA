@@ -22,7 +22,7 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
         String wingsState = "FIXED";
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
                 color, height, material, sound, wingsState);
@@ -43,7 +43,7 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
         String wingsState = "FIXED";
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckOdd,
                 color, height, material, sound, wingsState);

@@ -24,7 +24,7 @@ public class DuckCreateTest extends DuckActionsTest {
         String wingsState = "FIXED";
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         duckCreate(runner, color, height, material, sound, wingsState);
 
@@ -42,7 +42,7 @@ public class DuckCreateTest extends DuckActionsTest {
         String wingsState = "FIXED";
 
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         duckCreate(runner, color, height, material, sound, wingsState);
 

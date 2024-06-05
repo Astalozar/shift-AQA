@@ -16,7 +16,7 @@ public class DuckActionFlyTest extends DuckActionsTest {
     @CitrusTest
     public void testFlyActive(@Optional @CitrusResource TestCaseRunner runner) {
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", 0.15, "wood", "quack", "ACTIVE");
@@ -31,7 +31,7 @@ public class DuckActionFlyTest extends DuckActionsTest {
     @CitrusTest
     public void testFlyFixed(@Optional @CitrusResource TestCaseRunner runner) {
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", 0.15, "wood", "quack", "FIXED");
@@ -46,7 +46,7 @@ public class DuckActionFlyTest extends DuckActionsTest {
     @CitrusTest
     public void testFlyUndefined(@Optional @CitrusResource TestCaseRunner runner) {
         runner.$(doFinally().actions(
-                context -> removeDuckTestData(runner, duckId())));
+                context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", 0.15, "wood", "quack", "UNDEFINED");
