@@ -1,6 +1,6 @@
 package autotests.tests.duck_action_controller;
 
-import autotests.DuckActionsTest;
+import autotests.clients.DuckActionsTest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -9,7 +9,6 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
-import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 public class DuckActionQuackTest extends DuckActionsTest {
 
@@ -69,14 +68,5 @@ public class DuckActionQuackTest extends DuckActionsTest {
             }
         }
         return expectedSound.toString();
-    }
-
-    private void duckQuack(TestCaseRunner runner, String id, String repetitionCount, String soundCount) {
-        runner.$(http().client(getServerUrl())
-                .send()
-                .get("/api/duck/action/quack")
-                .queryParam("id", id)
-                .queryParam("repetitionCount", repetitionCount)
-                .queryParam("soundCount", soundCount));
     }
 }
