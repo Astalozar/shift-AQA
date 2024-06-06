@@ -34,9 +34,6 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
 
     @Autowired
     private HttpClient yellowDuckService;
-    protected HttpClient getYellowDuckService() {
-        return yellowDuckService;
-    }
 
     private static final String duckIdTestVariable ="${duckId}";
     /**
@@ -51,7 +48,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
      * Создать тестовую уточку с указанными параметрами и занести её id в тестовую переменную.
      */
     protected void createDuckTestData(TestCaseRunner runner, CheckEvenOdd checkEvenOdd,
-                                          String color, double height, String material, String sound, String wingsState) {
+                                          String color, String height, String material, String sound, String wingsState) {
         duckCreate(runner, color, height, material, sound, wingsState);
         validateResponseAndRecordId(runner, HttpStatus.OK, null);
 
@@ -84,21 +81,21 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
 
     //region Endpoints
     protected void duckProperties(TestCaseRunner runner, String id) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .get("/api/duck/action/properties")
                 .queryParam("id", id));
     }
 
     protected void duckFly(TestCaseRunner runner, String id) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .get("/api/duck/action/fly")
                 .queryParam("id", id));
     }
 
     protected void duckQuack(TestCaseRunner runner, String id, String repetitionCount, String soundCount) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .get("/api/duck/action/quack")
                 .queryParam("id", id)
@@ -107,16 +104,16 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
     }
 
     protected void duckSwim(TestCaseRunner runner, String id) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .get("/api/duck/action/swim")
                 .queryParam("id", id));
     }
 
     protected void duckCreate(TestCaseRunner runner,
-                           String color, double height, String material, String sound, String wingsState ) {
+                           String color, String height, String material, String sound, String wingsState ) {
         String payload = generateDuckJson(color, height, material, sound, wingsState);
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .post("/api/duck/create")
                 .message()
@@ -124,7 +121,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
                 .body(payload));    }
 
     protected void duckDelete(TestCaseRunner runner, String id) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .delete("/api/duck/delete")
                 .queryParam("id", id)
@@ -132,14 +129,14 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
     }
 
     protected void duckUpdate(TestCaseRunner runner, String id,
-                           String color, double height, String material, String sound, String wingsState ) {
-        runner.$(http().client(getYellowDuckService())
+                           String color, String height, String material, String sound, String wingsState ) {
+        runner.$(http().client(yellowDuckService)
                 .send()
                 .put("/api/duck/update")
                 .message()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .queryParam("color", color)
-                .queryParam("height", Double.toString(height))
+                .queryParam("height", height)
                 .queryParam("id", id)
                 .queryParam("material", material)
                 .queryParam("sound", sound)
@@ -153,7 +150,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
      * Провести валидацию ответа по указанным коду ответа и телу сообщения.
      */
     protected void validateResponse(TestCaseRunner runner, HttpStatus status, String responseMessage) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .receive()
                 .response(status)
                 .message()
@@ -164,7 +161,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
      * Провести валидацию ответа по указанным коду ответа и телу сообщения и занести id в тестовую переменную
      */
     protected void validateResponseAndRecordId(TestCaseRunner runner, HttpStatus status, String responseMessage) {
-        runner.$(http().client(getYellowDuckService())
+        runner.$(http().client(yellowDuckService)
                 .receive()
                 .response(status)
                 .message()
@@ -175,7 +172,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
 
     // Временная замена payload-ам, чтобы было проще создавать json-ы
 
-    protected String generateDuckJson(String color, double height, String material, String sound, String wingsState) {
+    protected String generateDuckJson(String color, String height, String material, String sound, String wingsState) {
         return "{\n" +
                 "  \"color\": \"" + color + "\",\n" +
                 "  \"height\": " + height + ",\n" +
@@ -185,7 +182,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
                 "}";
     }
 
-    protected String generateDuckJson(String id, String color, double height, String material, String sound, String wingsState) {
+    protected String generateDuckJson(String id, String color, String height, String material, String sound, String wingsState) {
         return "{\n" +
                 "  \"id\": " + id + ",\n" +
                 "  \"color\": \"" + color + "\",\n" +

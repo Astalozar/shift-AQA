@@ -15,7 +15,7 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
     @CitrusTest
     public void testEvenWoodProperties(@Optional @CitrusResource TestCaseRunner runner) {
         String color = "yellow";
-        double height = 0.15;
+        String height = "0.15";
         String material = "wood";
         String sound = "quack";
         String wingsState = "FIXED";
@@ -28,15 +28,14 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
 
         duckProperties(runner, duckId());
 
-        String responseMessage = generateDuckJson(color, height, material, sound, wingsState);
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateDuckJson(color, height, material, sound, wingsState));
     }
 
     @Test(description = "Проверить получение свойств резиновой уточки с целым нечетным ID")
     @CitrusTest
     public void testOddRubberProperties(@Optional @CitrusResource TestCaseRunner runner) {
         String color = "yellow";
-        double height = 0.15;
+        String height = "0.15";
         String material = "rubber";
         String sound = "quack";
         String wingsState = "FIXED";
@@ -49,7 +48,6 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
 
         duckProperties(runner, duckId());
 
-        String responseMessage = generateDuckJson(color, height, material, sound, wingsState);
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateDuckJson(color, height, material, sound, wingsState));
     }
 }

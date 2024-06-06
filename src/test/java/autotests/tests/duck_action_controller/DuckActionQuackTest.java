@@ -22,15 +22,13 @@ public class DuckActionQuackTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckOdd,
-                "yellow", 0.15, "wood", "quack", "FIXED");
+                "yellow", "0.15", "wood", "quack", "FIXED");
 
         duckQuack(runner, duckId(), Integer.toString(repetitionCount), Integer.toString(soundCount));
 
-        String expectedSound = getExpectedSoundResult("quack", repetitionCount, soundCount);
-
-        String responseMessage = generateMessageJson("sound",
-                "@equalsIgnoreCase(" + expectedSound + ")@");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("sound",
+                "@equalsIgnoreCase(" +
+                        getExpectedSoundResult("quack", repetitionCount, soundCount) + ")@"));
     }
 
     @Test(description = "Проверить крякание уточки с четным ID и корректным звуком")
@@ -43,18 +41,19 @@ public class DuckActionQuackTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
-                "yellow", 0.15, "wood", "quack", "FIXED");
+                "yellow", "0.15", "wood", "quack", "FIXED");
 
         duckQuack(runner, duckId(), Integer.toString(repetitionCount), Integer.toString(soundCount));
 
-        String expectedSound = getExpectedSoundResult("quack", repetitionCount, soundCount);
-
-        String responseMessage = generateMessageJson("sound",
-                "@equalsIgnoreCase(" + expectedSound + ")@");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("sound",
+                        getExpectedSoundResult("quack", repetitionCount, soundCount)));
     }
 
     private String getExpectedSoundResult(String sound, int repetitionCount, int soundCount) {
+        if(repetitionCount <= 0 || soundCount <= 0) {
+            return "";
+        }
+
         StringBuilder expectedSound = new StringBuilder();
         for(int i = 0; i < repetitionCount; i++) {
             for (int j = 0; j < soundCount; j++) {
@@ -67,6 +66,7 @@ public class DuckActionQuackTest extends DuckActionsTest {
                 expectedSound.append(", ");
             }
         }
-        return expectedSound.toString();
+
+        return "@equalsIgnoreCase('" + expectedSound + "')@";
     }
 }

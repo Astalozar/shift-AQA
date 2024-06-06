@@ -15,7 +15,7 @@ public class DuckCreateTest extends DuckActionsTest {
     @CitrusTest
     public void testCreateRubberDuck(@Optional @CitrusResource TestCaseRunner runner) {
         String color = "yellow";
-        double height = 0.15;
+        String height = "0.15";
         String material = "rubber";
         String sound = "quack";
         String wingsState = "FIXED";
@@ -25,15 +25,15 @@ public class DuckCreateTest extends DuckActionsTest {
 
         duckCreate(runner, color, height, material, sound, wingsState);
 
-        String responseMessage = generateDuckJson(duckId(), color, height, material, sound, wingsState);
-        validateResponseAndRecordId(runner, HttpStatus.OK, responseMessage);
+        validateResponseAndRecordId(runner, HttpStatus.OK,
+                generateDuckJson(duckId(), color, height, material, sound, wingsState));
     }
 
     @Test(description = "Проверить создание деревянной уточки")
     @CitrusTest
     public void testCreateWoodenDuck(@Optional @CitrusResource TestCaseRunner runner) {
         String color = "yellow";
-        double height = 0.15;
+        String height = "0.15";
         String material = "wood";
         String sound = "quack";
         String wingsState = "FIXED";
@@ -43,7 +43,7 @@ public class DuckCreateTest extends DuckActionsTest {
 
         duckCreate(runner, color, height, material, sound, wingsState);
 
-        String responseMessage = generateDuckJson(duckId(), color, height, material, sound, wingsState);
-        validateResponseAndRecordId(runner, HttpStatus.OK, responseMessage);
+        validateResponseAndRecordId(runner, HttpStatus.OK,
+                generateDuckJson(duckId(), color, height, material, sound, wingsState));
     }
 }

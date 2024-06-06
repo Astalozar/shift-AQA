@@ -18,12 +18,11 @@ public class DuckActionFlyTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "wood", "quack", "ACTIVE");
+                "yellow", "0.15", "wood", "quack", "ACTIVE");
 
         duckFly(runner, duckId());
 
-        String responseMessage = generateMessageJson("I am flying");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("I am flying"));
     }
 
     @Test(description = "Проверить полет уточки со связанными крыльями")
@@ -33,12 +32,11 @@ public class DuckActionFlyTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "wood", "quack", "FIXED");
+                "yellow", "0.15", "wood", "quack", "FIXED");
 
         duckFly(runner, duckId());
 
-        String responseMessage = generateMessageJson("I can not fly");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("I can not fly"));
     }
 
     @Test(description = "Проверить полет уточки с неопределенными крыльями")
@@ -48,11 +46,11 @@ public class DuckActionFlyTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "wood", "quack", "UNDEFINED");
+                "yellow", "0.15", "wood", "quack", "UNDEFINED");
 
         duckFly(runner, duckId());
 
-        String responseMessage = generateMessageJson("Wings are not detected");
-        validateResponse(runner, HttpStatus.INTERNAL_SERVER_ERROR, responseMessage);
+        validateResponse(runner, HttpStatus.INTERNAL_SERVER_ERROR,
+                generateMessageJson("Wings are not detected"));
     }
 }

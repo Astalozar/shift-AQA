@@ -13,11 +13,10 @@ public class DuckDeleteTest extends DuckActionsTest {
     @CitrusTest
     public void testDeleteExistingDuck(@Optional @CitrusResource TestCaseRunner runner) {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "rubber", "quack", "FIXED");
+                "yellow", "0.15", "rubber", "quack", "FIXED");
 
         duckDelete(runner, duckId());
 
-        String responseMessage = generateMessageJson("Duck is deleted");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("Duck is deleted"));
     }
 }

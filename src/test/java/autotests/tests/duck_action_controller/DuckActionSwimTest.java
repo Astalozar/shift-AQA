@@ -18,19 +18,18 @@ public class DuckActionSwimTest  extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "wood", "quack", "ACTIVE");
+                "yellow", "0.15", "wood", "quack", "ACTIVE");
 
         duckSwim(runner, duckId());
 
-        String responseMessage = generateMessageJson("I'm swimming");
-        validateResponse(runner, HttpStatus.OK, responseMessage);
+        validateResponse(runner, HttpStatus.OK, generateMessageJson("I'm swimming"));
     }
 
     @Test(description = "Проверить плавание несуществующей уточки")
     @CitrusTest
     public void testSwimNonExisting(@Optional @CitrusResource TestCaseRunner runner) {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", 0.15, "wood", "quack", "ACTIVE");
+                "yellow", "0.15", "wood", "quack", "ACTIVE");
         removeDuckTestData(runner);
         duckSwim(runner, duckId());
 
