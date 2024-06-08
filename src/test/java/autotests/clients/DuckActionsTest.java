@@ -1,11 +1,15 @@
 package autotests.clients;
 
 import autotests.EndpointConfig;
+import autotests.payloads.Duck;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.TestCaseRunner;
 
+import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,8 +53,10 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
      */
     protected void createDuckTestData(TestCaseRunner runner, CheckEvenOdd checkEvenOdd,
                                           String color, String height, String material, String sound, String wingsState) {
-        duckCreate(runner, color, height, material, sound, wingsState);
-        validateResponseAndRecordId(runner, HttpStatus.OK, null);
+
+        Duck duck = new Duck().color(color).height(Double.parseDouble(height)).material(material).sound(sound).wingsState(wingsState);
+        duckCreate(runner, duck);
+        validateDuckCreation(runner, HttpStatus.OK, null);
 
         // Если созданная уточка не подходит по четности id, удалить её и создать новую
         if(checkEvenOdd != CheckEvenOdd.NoCheck) {
@@ -110,15 +116,17 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
                 .queryParam("id", id));
     }
 
-    protected void duckCreate(TestCaseRunner runner,
-                           String color, String height, String material, String sound, String wingsState ) {
-        String payload = generateDuckJson(color, height, material, sound, wingsState);
+    protected void duckCreate(TestCaseRunner runner, Duck duck) {
         runner.$(http().client(yellowDuckService)
                 .send()
+
                 .post("/api/duck/create")
                 .message()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(payload));    }
+                .body(new ObjectMappingPayloadBuilder(
+                        duck,
+                        new ObjectMapper())));
+    }
 
     protected void duckDelete(TestCaseRunner runner, String id) {
         runner.$(http().client(yellowDuckService)
@@ -157,41 +165,36 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
                 .body(responseMessage));
     }
 
+    protected void validateResponseWithPayload(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
+        runner.$(http().client(yellowDuckService)
+                .receive()
+                .response(status)
+                .message()
+                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper())));
+    }
+
+    protected void validateResponseWithResource(TestCaseRunner runner, HttpStatus status, String expectedPayload) {
+        runner.$(http().client(yellowDuckService)
+                .receive()
+                .response(status)
+                .message()
+                .body(new ClassPathResource(expectedPayload)));
+    }
+
     /**
      * Провести валидацию ответа по указанным коду ответа и телу сообщения и занести id в тестовую переменную
      */
-    protected void validateResponseAndRecordId(TestCaseRunner runner, HttpStatus status, String responseMessage) {
+    protected void validateDuckCreation(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
         runner.$(http().client(yellowDuckService)
                 .receive()
                 .response(status)
                 .message()
                 .extract(fromBody().expression("$.id", duckId()))
-                .body(responseMessage));
+                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper())));
     }
 
 
     // Временная замена payload-ам, чтобы было проще создавать json-ы
-
-    protected String generateDuckJson(String color, String height, String material, String sound, String wingsState) {
-        return "{\n" +
-                "  \"color\": \"" + color + "\",\n" +
-                "  \"height\": " + height + ",\n" +
-                "  \"material\": \"" + material + "\",\n" +
-                "  \"sound\": \"" + sound + "\",\n" +
-                "  \"wingsState\": \"" + wingsState + "\"\n" +
-                "}";
-    }
-
-    protected String generateDuckJson(String id, String color, String height, String material, String sound, String wingsState) {
-        return "{\n" +
-                "  \"id\": " + id + ",\n" +
-                "  \"color\": \"" + color + "\",\n" +
-                "  \"height\": " + height + ",\n" +
-                "  \"material\": \"" + material + "\",\n" +
-                "  \"sound\": \"" + sound + "\",\n" +
-                "  \"wingsState\": \"" + wingsState + "\"\n" +
-                "}";
-    }
 
     protected String generateMessageJson(String messageText) {
         return generateMessageJson("message", messageText);

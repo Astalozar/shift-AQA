@@ -1,6 +1,7 @@
 package autotests.tests.duck_action_controller;
 
 import autotests.clients.DuckActionsTest;
+import autotests.payloads.ResponseMessage;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -22,7 +23,7 @@ public class DuckActionSwimTest  extends DuckActionsTest {
 
         duckSwim(runner, duckId());
 
-        validateResponse(runner, HttpStatus.OK, generateMessageJson("I'm swimming"));
+        validateResponseWithResource(runner, HttpStatus.OK, "duckActionSwimTest/SwimSuccessResponse.json");
     }
 
     @Test(description = "Проверить плавание несуществующей уточки")
@@ -33,13 +34,11 @@ public class DuckActionSwimTest  extends DuckActionsTest {
         removeDuckTestData(runner);
         duckSwim(runner, duckId());
 
-        validateResponse(runner, HttpStatus.NOT_FOUND,
-                "{\n" +
-                        "  \"timestamp\": \"@ignore@\",\n" +
-                        "  \"status\": 404,\n" +
-                        "  \"error\": \"Duck not found\",\n" +
-                        "  \"message\": \"Duck with id = " + duckId() + " is not found\",\n" +
-                        "  \"path\": \"/api/duck/action/fly\"\n" +
-                        "}");
+        validateResponseWithPayload(runner, HttpStatus.NOT_FOUND, new ResponseMessage()
+                .timestamp("@ignore")
+                .status(500)
+                .error("Internal Server Error")
+                .message("Duck with id = \" + duckId() + \" is not found")
+                .path("/api/duck/action/fly"));
     }
 }

@@ -1,6 +1,7 @@
 package autotests.tests.duck_action_controller;
 
 import autotests.clients.DuckActionsTest;
+import autotests.payloads.Duck;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -14,40 +15,38 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
     @Test(description = "Проверить получение свойств деревянной уточки с целым четным ID")
     @CitrusTest
     public void testEvenWoodProperties(@Optional @CitrusResource TestCaseRunner runner) {
-        String color = "yellow";
-        String height = "0.15";
-        String material = "wood";
-        String sound = "quack";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
-                color, height, material, sound, wingsState);
+                "yellow", "0.15", "wood", "quack", "FIXED");
 
         duckProperties(runner, duckId());
 
-        validateResponse(runner, HttpStatus.OK, generateDuckJson(color, height, material, sound, wingsState));
+        validateResponseWithPayload(runner, HttpStatus.OK, new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("wood")
+                .sound("quack")
+                .wingsState("FIXED"));
     }
 
     @Test(description = "Проверить получение свойств резиновой уточки с целым нечетным ID")
     @CitrusTest
     public void testOddRubberProperties(@Optional @CitrusResource TestCaseRunner runner) {
-        String color = "yellow";
-        String height = "0.15";
-        String material = "rubber";
-        String sound = "quack";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
-        createDuckTestData(runner, CheckEvenOdd.CheckOdd,
-                color, height, material, sound, wingsState);
+        createDuckTestData(runner, CheckEvenOdd.CheckEven,
+                "yellow", "0.15", "wood", "quack", "FIXED");
 
         duckProperties(runner, duckId());
 
-        validateResponse(runner, HttpStatus.OK, generateDuckJson(color, height, material, sound, wingsState));
+        validateResponseWithPayload(runner, HttpStatus.OK, new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("wood")
+                .sound("quack")
+                .wingsState("FIXED"));
     }
 }

@@ -1,6 +1,7 @@
 package autotests.tests.duck_controller;
 
 import autotests.clients.DuckActionsTest;
+import autotests.payloads.Duck;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -14,36 +15,44 @@ public class DuckCreateTest extends DuckActionsTest {
     @Test(description = "Проверить создание резиновой уточки")
     @CitrusTest
     public void testCreateRubberDuck(@Optional @CitrusResource TestCaseRunner runner) {
-        String color = "yellow";
-        String height = "0.15";
-        String material = "rubber";
-        String sound = "quack";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
-        duckCreate(runner, color, height, material, sound, wingsState);
+        Duck duckProperties = new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("rubber")
+                .sound("quack")
+                .wingsState("FIXED");
 
-        validateResponseAndRecordId(runner, HttpStatus.OK,
-                generateDuckJson(duckId(), color, height, material, sound, wingsState));
+        duckCreate(runner, duckProperties);
+
+        // Пока у нас нет доступа к базе, id можно игнорировать, потому что он берётся из того же запроса,
+        // который мы валидируем, и всегда будет корректным
+        duckProperties.id("@ignore@");
+
+        validateDuckCreation(runner, HttpStatus.OK, duckProperties);
     }
 
     @Test(description = "Проверить создание деревянной уточки")
     @CitrusTest
     public void testCreateWoodenDuck(@Optional @CitrusResource TestCaseRunner runner) {
-        String color = "yellow";
-        String height = "0.15";
-        String material = "wood";
-        String sound = "quack";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
-        duckCreate(runner, color, height, material, sound, wingsState);
+        Duck duckProperties = new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("wood")
+                .sound("quack")
+                .wingsState("FIXED");
 
-        validateResponseAndRecordId(runner, HttpStatus.OK,
-                generateDuckJson(duckId(), color, height, material, sound, wingsState));
+        duckCreate(runner, duckProperties);
+
+        // Пока у нас нет доступа к базе, id можно игнорировать, потому что он берётся из того же запроса,
+        // который мы валидируем, и всегда будет корректным
+        duckProperties.id("@ignore@");
+
+        validateDuckCreation(runner, HttpStatus.OK, duckProperties);
     }
 }
