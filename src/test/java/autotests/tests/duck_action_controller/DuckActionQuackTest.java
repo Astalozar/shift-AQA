@@ -4,14 +4,20 @@ import autotests.clients.DuckActionsTest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
-public class DuckActionQuackTest extends DuckActionsTest {
+@Epic("Тесты на duck-action-controller")
+@Feature("Эндпоинт /api/duck/action/quack")
 
+public class DuckActionQuackTest extends DuckActionsTest {
+    @Step("Крякание уточки с нечетным ID и корректным звуком")
     @Test(description = "Проверить крякание уточки с нечетным ID и корректным звуком")
     @CitrusTest
     public void testOddCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {
@@ -31,6 +37,7 @@ public class DuckActionQuackTest extends DuckActionsTest {
                         getExpectedSoundResult("quack", repetitionCount, soundCount) + ")@"));
     }
 
+    @Step("Крякание уточки с четным ID и корректным звуком")
     @Test(description = "Проверить крякание уточки с четным ID и корректным звуком")
     @CitrusTest
     public void testEvenCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {

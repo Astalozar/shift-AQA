@@ -4,13 +4,20 @@ import autotests.clients.DuckActionsTest;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
+@Epic("Тесты на duck-controller")
+@Feature("Эндпоинт /api/duck/update")
 public class DuckUpdateTest extends DuckActionsTest {
+
+    @Step("Редактирование цвета и высоты уточки")
     @Test(description = "Проверить редактирование цвета и высоты уточки")
     @CitrusTest
     public void testEditDuckColorHeight(@Optional @CitrusResource TestCaseRunner runner) {
@@ -28,6 +35,7 @@ public class DuckUpdateTest extends DuckActionsTest {
                 generateMessageJson("Duck with id = " + duckId() + " is updated"));
     }
 
+    @Step("Редактирование цвета и звука уточки")
     @Test(description = "Проверить редактирование цвета и звука уточки")
     @CitrusTest
     public void testEditDuckColorSound(@Optional @CitrusResource TestCaseRunner runner) {
