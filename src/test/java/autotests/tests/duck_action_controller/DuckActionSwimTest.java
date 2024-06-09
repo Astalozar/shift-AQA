@@ -27,9 +27,10 @@ public class DuckActionSwimTest  extends DuckActionsTest {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", "0.15", "wood", "quack", "ACTIVE");
 
-        duckSwim(runner, duckId());
+        duckSwim(runner, duckIdVar);
 
-        validateResponseWithResource(runner, HttpStatus.OK, "duckActionSwimTest/SwimSuccessResponse.json");
+        validateResponseWithResource(runner, HttpStatus.OK,
+                "duckActionSwimTest/SwimSuccessResponse.json");
     }
 
     @Step("Плавание несуществующей уточки")
@@ -39,13 +40,13 @@ public class DuckActionSwimTest  extends DuckActionsTest {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", "0.15", "wood", "quack", "ACTIVE");
         removeDuckTestData(runner);
-        duckSwim(runner, duckId());
+        duckSwim(runner, duckIdVar);
 
         validateResponseWithPayload(runner, HttpStatus.NOT_FOUND, new ResponseMessage()
                 .timestamp("@ignore")
                 .status(500)
                 .error("Internal Server Error")
-                .message("Duck with id = \" + duckId() + \" is not found")
+                .message("Duck with id = " + duckIdVar + " is not found")
                 .path("/api/duck/action/fly"));
     }
 }

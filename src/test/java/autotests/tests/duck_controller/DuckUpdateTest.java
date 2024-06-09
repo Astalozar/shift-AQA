@@ -1,6 +1,7 @@
 package autotests.tests.duck_controller;
 
 import autotests.clients.DuckActionsTest;
+import autotests.payloads.Duck;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -21,35 +22,51 @@ public class DuckUpdateTest extends DuckActionsTest {
     @Test(description = "Проверить редактирование цвета и высоты уточки")
     @CitrusTest
     public void testEditDuckColorHeight(@Optional @CitrusResource TestCaseRunner runner) {
-        String material = "rubber";
-        String sound = "quack";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
-        createDuckTestData(runner, CheckEvenOdd.NoCheck, "yellow", "0.15", material, sound, wingsState);
 
-        duckUpdate(runner, duckId(), "green", "0.95", material, sound, wingsState);
+        createDuckTestData(runner, CheckEvenOdd.NoCheck,
+                "yellow", "0.15", "rubber", "quack", "FIXED");
+
+        duckUpdate(runner, duckIdVar,
+                "green", "0.95", "rubber", "quack", "FIXED");
 
         validateResponse(runner, HttpStatus.OK,
-                generateMessageJson("Duck with id = " + duckId() + " is updated"));
+                "{\n" +
+                        "  \"" + "message" + "\": \"" + duckIdVar + "\"\n" +
+                        "}");
+
+        validateDuckProperties(runner, new Duck()
+                .color("green")
+                .height(0.95)
+                .material("rubber")
+                .sound("quack")
+                .wingsState(Duck.WingsState.FIXED));
     }
 
     @Step("Редактирование цвета и звука уточки")
     @Test(description = "Проверить редактирование цвета и звука уточки")
     @CitrusTest
     public void testEditDuckColorSound(@Optional @CitrusResource TestCaseRunner runner) {
-        String height = "0.15";
-        String material = "rubber";
-        String wingsState = "FIXED";
-
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
-        createDuckTestData(runner, CheckEvenOdd.NoCheck,  "yellow", height, material, "quack", wingsState);
 
-        duckUpdate(runner, duckId(), "blue", height, material, "wuph", wingsState);
+        createDuckTestData(runner, CheckEvenOdd.NoCheck,
+                "yellow", "0.15", "rubber", "quack", "FIXED");
+
+        duckUpdate(runner, duckIdVar,
+                "blue", "0.15", "rubber", "wuph", "FIXED");
 
         validateResponse(runner, HttpStatus.OK,
-                generateMessageJson("Duck with id = " + duckId() + " is updated"));
+                "{\n" +
+                        "  \"" + "message" + "\": \"" + duckIdVar + "\"\n" +
+                        "}");
+
+        validateDuckProperties(runner, new Duck()
+                .color("blue")
+                .height(0.15)
+                .material("rubber")
+                .sound("wuph")
+                .wingsState(Duck.WingsState.FIXED));
     }
 }

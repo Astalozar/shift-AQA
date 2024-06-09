@@ -29,7 +29,7 @@ public class DuckCreateTest extends DuckActionsTest {
                 .height(0.15)
                 .material("rubber")
                 .sound("quack")
-                .wingsState("FIXED");
+                .wingsState(Duck.WingsState.FIXED);
 
         duckCreate(runner, duckProperties);
 
@@ -38,6 +38,7 @@ public class DuckCreateTest extends DuckActionsTest {
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
+        validateDuckProperties(runner, duckProperties);
     }
 
     @Step("Cоздание деревянной уточки")
@@ -52,14 +53,15 @@ public class DuckCreateTest extends DuckActionsTest {
                 .height(0.15)
                 .material("wood")
                 .sound("quack")
-                .wingsState("FIXED");
+                .wingsState(Duck.WingsState.FIXED);
 
         duckCreate(runner, duckProperties);
 
-        // Пока у нас нет доступа к базе, id можно игнорировать, потому что он берётся из того же запроса,
+        // В этом запросе id можно игнорировать, потому что он берётся из того же запроса,
         // который мы валидируем, и всегда будет корректным
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
+        validateDuckProperties(runner, duckProperties);
     }
 }

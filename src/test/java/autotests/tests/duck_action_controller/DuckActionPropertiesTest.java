@@ -27,14 +27,14 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
                 "yellow", "0.15", "wood", "quack", "FIXED");
 
-        duckProperties(runner, duckId());
+        duckProperties(runner, duckIdVar);
 
         validateResponseWithPayload(runner, HttpStatus.OK, new Duck()
                 .color("yellow")
                 .height(0.15)
                 .material("wood")
                 .sound("quack")
-                .wingsState("FIXED"));
+                .wingsState(Duck.WingsState.FIXED));
     }
 
     @Step("Получение свойств резиновой уточки с целым нечетным ID")
@@ -45,15 +45,15 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
                 context -> removeDuckTestData(runner)));
 
         createDuckTestData(runner, CheckEvenOdd.CheckEven,
-                "yellow", "0.15", "wood", "quack", "FIXED");
+                "yellow", "0.15", "rubber", "quack", "FIXED");
 
-        duckProperties(runner, duckId());
+        duckProperties(runner, duckIdVar);
 
         validateResponseWithPayload(runner, HttpStatus.OK, new Duck()
                 .color("yellow")
                 .height(0.15)
-                .material("wood")
+                .material("rubber")
                 .sound("quack")
-                .wingsState("FIXED"));
+                .wingsState(Duck.WingsState.FIXED));
     }
 }

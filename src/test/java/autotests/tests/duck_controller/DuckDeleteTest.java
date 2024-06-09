@@ -21,7 +21,7 @@ public class DuckDeleteTest extends DuckActionsTest {
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
                 "yellow", "0.15", "rubber", "quack", "FIXED");
 
-        duckDelete(runner, duckId());
+        duckDelete(runner, duckIdVar);
 
         validateResponse(runner, HttpStatus.OK, generateMessageJson("Duck is deleted"));
     }
