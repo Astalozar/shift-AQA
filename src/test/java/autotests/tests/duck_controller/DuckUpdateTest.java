@@ -33,7 +33,7 @@ public class DuckUpdateTest extends DuckActionsTest {
 
         validateResponse(runner, HttpStatus.OK,
                 "{\n" +
-                        "  \"" + "message" + "\": \"" + duckIdVar + "\"\n" +
+                        "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
         validateDuckProperties(runner, new Duck()
@@ -59,7 +59,7 @@ public class DuckUpdateTest extends DuckActionsTest {
 
         validateResponse(runner, HttpStatus.OK,
                 "{\n" +
-                        "  \"" + "message" + "\": \"" + duckIdVar + "\"\n" +
+                        "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
         validateDuckProperties(runner, new Duck()

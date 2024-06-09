@@ -23,6 +23,9 @@ public class DuckDeleteTest extends DuckActionsTest {
 
         duckDelete(runner, duckIdVar);
 
-        validateResponse(runner, HttpStatus.OK, generateMessageJson("Duck is deleted"));
+        validateResponse(runner, HttpStatus.OK,
+                "{\n" +
+                "  \"" + "message" + "\": \"Duck is deleted\"\n" +
+                "}");
     }
 }
