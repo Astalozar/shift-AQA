@@ -36,7 +36,7 @@ public class DuckUpdateTest extends DuckActionsTest {
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckProperties(runner, new Duck()
+        validateDuckPropertiesInDatabase(runner, new Duck()
                 .color("green")
                 .height(0.95)
                 .material("rubber")
@@ -44,7 +44,6 @@ public class DuckUpdateTest extends DuckActionsTest {
                 .wingsState(Duck.WingsState.FIXED));
     }
 
-    @Step("Редактирование цвета и звука уточки")
     @Test(description = "Проверить редактирование цвета и звука уточки")
     @CitrusTest
     public void testEditDuckColorSound(@Optional @CitrusResource TestCaseRunner runner) {
@@ -62,7 +61,7 @@ public class DuckUpdateTest extends DuckActionsTest {
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckProperties(runner, new Duck()
+        validateDuckPropertiesInDatabase(runner, new Duck()
                 .color("blue")
                 .height(0.15)
                 .material("rubber")

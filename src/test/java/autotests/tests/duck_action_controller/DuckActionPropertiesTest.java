@@ -17,7 +17,6 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты на duck-action-controller")
 @Feature("Эндпоинт /api/duck/action/properties")
 public class DuckActionPropertiesTest extends DuckActionsTest {
-    @Step("Получение свойств деревянной уточки с целым четным ID")
     @Test(description = "Проверить получение свойств деревянной уточки с целым четным ID")
     @CitrusTest
     public void testEvenWoodProperties(@Optional @CitrusResource TestCaseRunner runner) {
@@ -37,7 +36,6 @@ public class DuckActionPropertiesTest extends DuckActionsTest {
                 .wingsState(Duck.WingsState.FIXED));
     }
 
-    @Step("Получение свойств резиновой уточки с целым нечетным ID")
     @Test(description = "Проверить получение свойств резиновой уточки с целым нечетным ID")
     @CitrusTest
     public void testOddRubberProperties(@Optional @CitrusResource TestCaseRunner runner) {

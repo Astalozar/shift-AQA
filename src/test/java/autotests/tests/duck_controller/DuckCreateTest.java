@@ -7,7 +7,6 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Step;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
@@ -17,7 +16,6 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты на duck-controller")
 @Feature("Эндпоинт /api/duck/create")
 public class DuckCreateTest extends DuckActionsTest {
-    @Step("Cоздание резиновой уточки")
     @Test(description = "Проверить создание резиновой уточки")
     @CitrusTest
     public void testCreateRubberDuck(@Optional @CitrusResource TestCaseRunner runner) {
@@ -38,10 +36,9 @@ public class DuckCreateTest extends DuckActionsTest {
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
-        validateDuckProperties(runner, duckProperties);
+        validateDuckPropertiesInDatabase(runner, duckProperties);
     }
 
-    @Step("Cоздание деревянной уточки")
     @Test(description = "Проверить создание деревянной уточки")
     @CitrusTest
     public void testCreateWoodenDuck(@Optional @CitrusResource TestCaseRunner runner) {
@@ -62,6 +59,6 @@ public class DuckCreateTest extends DuckActionsTest {
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
-        validateDuckProperties(runner, duckProperties);
+        validateDuckPropertiesInDatabase(runner, duckProperties);
     }
 }

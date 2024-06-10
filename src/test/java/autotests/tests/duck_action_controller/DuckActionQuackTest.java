@@ -18,7 +18,6 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Feature("Эндпоинт /api/duck/action/quack")
 
 public class DuckActionQuackTest extends DuckActionsTest {
-    @Step("Крякание уточки с нечетным ID и корректным звуком")
     @Test(description = "Проверить крякание уточки с нечетным ID и корректным звуком")
     @CitrusTest
     public void testOddCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {
@@ -34,7 +33,6 @@ public class DuckActionQuackTest extends DuckActionsTest {
                 "@equalsIgnoreCase('quack-quack-quack, quack-quack-quack')@"));
     }
 
-    @Step("Крякание уточки с четным ID и корректным звуком")
     @Test(description = "Проверить крякание уточки с четным ID и корректным звуком")
     @CitrusTest
     public void testEvenCorrectQuack(@Optional @CitrusResource TestCaseRunner runner) {

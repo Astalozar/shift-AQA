@@ -17,7 +17,6 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты на duck-action-controller")
 @Feature("Эндпоинт /api/duck/action/swim")
 public class DuckActionSwimTest  extends DuckActionsTest {
-    @Step("Плавание существующей уточки")
     @Test(description = "Проверить плавание существующей уточки")
     @CitrusTest
     public void testSwimExisting(@Optional @CitrusResource TestCaseRunner runner) {
@@ -33,7 +32,6 @@ public class DuckActionSwimTest  extends DuckActionsTest {
                 "duckActionSwimTest/SwimSuccessResponse.json");
     }
 
-    @Step("Плавание несуществующей уточки")
     @Test(description = "Проверить плавание несуществующей уточки")
     @CitrusTest
     public void testSwimNonExisting(@Optional @CitrusResource TestCaseRunner runner) {

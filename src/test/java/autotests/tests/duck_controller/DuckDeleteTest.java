@@ -14,7 +14,6 @@ import org.testng.annotations.Test;
 @Epic("Тесты на duck-controller")
 @Feature("Эндпоинт /api/duck/delete")
 public class DuckDeleteTest extends DuckActionsTest {
-    @Step("Удаление существующей уточки")
     @Test(description = "Проверить удаление существующей уточки")
     @CitrusTest
     public void testDeleteExistingDuck(@Optional @CitrusResource TestCaseRunner runner) {
@@ -27,5 +26,6 @@ public class DuckDeleteTest extends DuckActionsTest {
                 "{\n" +
                 "  \"" + "message" + "\": \"Duck is deleted\"\n" +
                 "}");
+        validateDuckDeletedFromDatabase(runner);
     }
 }

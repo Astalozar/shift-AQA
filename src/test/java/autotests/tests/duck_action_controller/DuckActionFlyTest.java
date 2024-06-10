@@ -19,7 +19,6 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Feature("Эндпоинт /api/duck/action/fly")
 
 public class DuckActionFlyTest extends DuckActionsTest {
-    @Step("Полет уточки с активными крыльями")
     @Test(description = "Проверить полет уточки с активными крыльями")
     @CitrusTest
     public void testFlyActive(@Optional @CitrusResource TestCaseRunner runner) {
@@ -35,7 +34,6 @@ public class DuckActionFlyTest extends DuckActionsTest {
                 "duckActionFlyTest/FlySuccessResponse.json");
     }
 
-    @Step("Полет уточки со связанными крыльями")
     @Test(description = "Проверить полет уточки со связанными крыльями")
     @CitrusTest
     public void testFlyFixed(@Optional @CitrusResource TestCaseRunner runner) {
@@ -51,7 +49,6 @@ public class DuckActionFlyTest extends DuckActionsTest {
                 new ResponseMessage().message("I can not fly"));
     }
 
-    @Step("Полет уточки с неопределенными крыльями")
     @Test(description = "Проверить полет уточки с неопределенными крыльями")
     @CitrusTest
     public void testFlyUndefined(@Optional @CitrusResource TestCaseRunner runner) {
