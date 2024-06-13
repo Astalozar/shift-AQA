@@ -179,7 +179,7 @@ public class DuckActionsTest extends BaseTest {
 
     @Step("Проверить успешность создания уточки и записать ее id в тестовую переменную ")
     protected void validateDuckCreation(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
-        receiveResponseAndValidateWithPayloadAndExtract(runner, yellowDuckService, status, expectedPayload,
+        receiveResponseAndValidateWithPayload(runner, yellowDuckService, status, expectedPayload,
                 "$.id", duckIdVar);
     }
 }

@@ -101,28 +101,18 @@ public class BaseTest  extends TestNGCitrusSpringSupport {
                 .body(responseMessage));
     }
 
-    protected void receiveResponseAndValidateWithPayload(TestCaseRunner runner,
-                                                         HttpClient client, HttpStatus status,
-                                                         Object expectedPayload) {
-        runner.$(http().client(client)
-                .receive()
-                .response(status)
-                .message()
-                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper())));
-    }
 
-    protected void receiveResponseAndValidateWithPayloadAndExtract(TestCaseRunner runner,
+    protected void receiveResponseAndValidateWithPayload(TestCaseRunner runner,
                                                              HttpClient client, HttpStatus status,
                                                              Object expectedPayload,
-
-                                                             String... parameters) {
-        var builder = http().client(yellowDuckService)
+                                                             String... extractParameters) {
+        var builder = http().client(client)
                 .receive()
                 .response(status)
                 .message();
 
         String parameterName = null;
-        for (var parameter : parameters) {
+        for (var parameter : extractParameters) {
             if(parameterName == null) {
                 parameterName = parameter;
             } else {
@@ -139,13 +129,31 @@ public class BaseTest  extends TestNGCitrusSpringSupport {
 
     protected void receiveResponseAndValidateWithResource(TestCaseRunner runner,
                                                           HttpClient client, HttpStatus status,
-                                                          String resourcePath) {
-        runner.$(http().client(client)
+                                                          String resourcePath,
+                                                          String... extractParameters) {
+        var builder = http().client(client)
                 .receive()
                 .response(status)
-                .message()
-                .body(new ClassPathResource(resourcePath)));
+                .message();
+
+        String parameterName = null;
+        for (var parameter : extractParameters) {
+            if(parameterName == null) {
+                parameterName = parameter;
+            } else {
+                builder.extract(fromBody().expression(parameterName, parameter));
+                parameterName = null;
+            }
+        }
+
+        if(resourcePath != null) {
+            builder.body(new ClassPathResource(resourcePath));
+        }
+        runner.$(builder);
     }
+
+
+
 
     protected void sendDatabaseQueryAndValidate(TestCaseRunner runner, SingleConnectionDataSource dataSource,
                                                 String statement, String... parameters) {
