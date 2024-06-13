@@ -17,31 +17,43 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 @Epic("Тесты на duck-controller")
 @Feature("Эндпоинт /api/duck/update")
 public class DuckUpdateTest extends DuckActionsTest {
-
-    @Step("Редактирование цвета и высоты уточки")
     @Test(description = "Проверить редактирование цвета и высоты уточки")
     @CitrusTest
     public void testEditDuckColorHeight(@Optional @CitrusResource TestCaseRunner runner) {
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
+        Duck defaultDuckProperties = new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("rubber")
+                .sound("quack")
+                .wingsState(Duck.WingsState.ACTIVE);
+
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", "0.15", "rubber", "quack", "FIXED");
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
+
+        defaultDuckProperties
+                .color("green")
+                .height(0.95);
 
         duckUpdate(runner, duckIdVar,
-                "green", "0.95", "rubber", "quack", "FIXED");
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
 
         validateResponse(runner, HttpStatus.OK,
                 "{\n" +
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckPropertiesInDatabase(runner, new Duck()
-                .color("green")
-                .height(0.95)
-                .material("rubber")
-                .sound("quack")
-                .wingsState(Duck.WingsState.FIXED));
+        validateDuckPropertiesInDatabase(runner, defaultDuckProperties);
     }
 
     @Test(description = "Проверить редактирование цвета и звука уточки")
@@ -50,22 +62,36 @@ public class DuckUpdateTest extends DuckActionsTest {
         runner.$(doFinally().actions(
                 context -> removeDuckTestData(runner)));
 
+        Duck defaultDuckProperties = new Duck()
+                .color("yellow")
+                .height(0.15)
+                .material("rubber")
+                .sound("quack")
+                .wingsState(Duck.WingsState.ACTIVE);
+
         createDuckTestData(runner, CheckEvenOdd.NoCheck,
-                "yellow", "0.15", "rubber", "quack", "FIXED");
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
+
+        defaultDuckProperties
+                .color("blue")
+                .sound("wuphf");
 
         duckUpdate(runner, duckIdVar,
-                "blue", "0.15", "rubber", "wuph", "FIXED");
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
 
         validateResponse(runner, HttpStatus.OK,
                 "{\n" +
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckPropertiesInDatabase(runner, new Duck()
-                .color("blue")
-                .height(0.15)
-                .material("rubber")
-                .sound("wuph")
-                .wingsState(Duck.WingsState.FIXED));
+        validateDuckPropertiesInDatabase(runner, defaultDuckProperties);
     }
 }

@@ -41,7 +41,6 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
 
     protected static final String duckIdVar ="${duckId}";
 
-
     //region Работа с тестовыми данными
     /**
      * Выбрать свободный id из базы и создать уточку.
@@ -218,6 +217,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
                 .body(new ClassPathResource(expectedPayload)));
     }
 
+    @Step("Проверить свойства уточки в базе данных")
     protected void validateDuckPropertiesInDatabase(TestCaseRunner runner, Duck expectedPayload) {
         runner.$(query(yellowDuckDb).statement("select * from DUCK where ID = '${" + duckIdVar + "}'")
                 .validate("COLOR", expectedPayload.color())
@@ -228,6 +228,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
         );
     }
 
+    @Step("Проверить, удалена ли уточка из базы данных")
     protected void validateDuckDeletedFromDatabase(TestCaseRunner runner) {
         runner.$(query(yellowDuckDb).statement(
                 "select COUNT(ID) as FOUND from DUCK where ID = '${" + duckIdVar + "}'")
@@ -237,6 +238,7 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
     /**
      * Провести валидацию ответа по указанным коду ответа и телу сообщения и занести id в тестовую переменную
      */
+    @Step("Проверить успешность создания уточки и записать ее id в тестовую переменную")
     protected void validateDuckCreation(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
         runner.$(http().client(yellowDuckService)
                 .receive()
