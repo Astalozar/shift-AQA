@@ -1,29 +1,19 @@
 package autotests.clients;
 
-import autotests.EndpointConfig;
+import autotests.BaseTest;
 import autotests.payloads.Duck;
-import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.TestCaseRunner;
 
 import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
-import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Step;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.context.ContextConfiguration;
 
-import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
-import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
-@ContextConfiguration(classes = {EndpointConfig.class})
-
-public class DuckActionsTest extends TestNGCitrusSpringSupport {
+public class DuckActionsTest extends BaseTest {
     /**
      * Определяет, требуется ли проверка на четность-нечетность id.
      */
@@ -33,18 +23,9 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
         CheckOdd
     }
 
-    @Autowired
-    private HttpClient yellowDuckService;
-
-    @Autowired
-    protected SingleConnectionDataSource yellowDuckDb;
-
     protected static final String duckIdVar ="${duckId}";
 
     //region Работа с тестовыми данными
-    /**
-     * Выбрать свободный id из базы и создать уточку.
-     */
     @Step("Создать тестовую уточку")
     protected void createDuckTestData(TestCaseRunner runner, CheckEvenOdd checkEvenOdd,
                                           String color, String height, String material, String sound, String wingsState) {
@@ -56,26 +37,21 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
         variable("sound", sound);
         variable("wingsState", wingsState);
 
-        runner.$(sql(yellowDuckDb)
-                .statement("INSERT INTO DUCK (ID, COLOR, HEIGHT, MATERIAL, SOUND, WINGS_STATE)\n" +
-                        "VALUES(" + duckIdVar + ", '${color}', ${height}, '${material}', '${sound}', '${wingsState}')"
-                ));
+        sendDatabaseRequest(runner, yellowDuckDb,
+                "INSERT INTO DUCK (ID, COLOR, HEIGHT, MATERIAL, SOUND, WINGS_STATE)\n" +
+                "VALUES(" + duckIdVar + ", '${color}', ${height}, '${material}', '${sound}', '${wingsState}')");
+
     }
 
-    /**
-     * Удалить тестовые данные уточки с id, хранящимся в указанной тестовой переменной.
-     */
     @Step("Удалить тестовую уточку")
     protected void removeDuckTestData(TestCaseRunner runner) {
-        runner.$(sql(yellowDuckDb)
-                .statement("DELETE FROM DUCK WHERE ID = " + duckIdVar));
+        sendDatabaseRequest(runner, yellowDuckDb, "DELETE FROM DUCK WHERE ID = " + duckIdVar);
     }
 
     protected void generateRandomFreeId(TestCaseRunner runner, CheckEvenOdd checkEvenOdd) {
-        //variable(duckIdVar, "0");
-        runner.$(query(yellowDuckDb)
-                .statement("SELECT MAX(ID) AS ID FROM DUCK ")
-                .extract("ID", duckIdVar));
+        sendDatabaseQueryAndExtract(runner, yellowDuckDb,
+                "SELECT MAX(ID) AS ID FROM DUCK",
+                "ID", duckIdVar);
 
         run(context -> {
             String duckId = context.getVariable(duckIdVar);
@@ -114,137 +90,96 @@ public class DuckActionsTest extends TestNGCitrusSpringSupport {
     //region Endpoints
     @Step("Получить свойства уточки /api/duck/action/properties")
     protected void duckProperties(TestCaseRunner runner, String id) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .get("/api/duck/action/properties")
-                .queryParam("id", id));
+        sendGetRequest(runner, yellowDuckService, "/api/duck/action/properties" +
+                generateQueryParametersString("id", id));
     }
 
     @Step("Полет уточки /api/duck/action/fly")
     protected void duckFly(TestCaseRunner runner, String id) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .get("/api/duck/action/fly")
-                .queryParam("id", id));
+        sendGetRequest(runner, yellowDuckService, "/api/duck/action/fly" +
+                generateQueryParametersString("id", id));
     }
 
     @Step("Крякание уточки /api/duck/action/quack")
     protected void duckQuack(TestCaseRunner runner, String id, String repetitionCount, String soundCount) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .get("/api/duck/action/quack")
-                .queryParam("id", id)
-                .queryParam("repetitionCount", repetitionCount)
-                .queryParam("soundCount", soundCount));
+        sendGetRequest(runner, yellowDuckService, "/api/duck/action/quack" +
+                generateQueryParametersString(
+                        "id", id,
+                        "repetitionCount", repetitionCount,
+                        "soundCount", soundCount
+                ));
     }
 
     @Step("Плавание уточки /api/duck/action/swim")
     protected void duckSwim(TestCaseRunner runner, String id) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .get("/api/duck/action/swim")
-                .queryParam("id", id));
+        sendGetRequest(runner, yellowDuckService, "/api/duck/action/swim" +
+                generateQueryParametersString("id", id));
     }
 
     @Step("Создание уточки /api/duck/create")
     protected void duckCreate(TestCaseRunner runner, Duck duck) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-
-                .post("/api/duck/create")
-                .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ObjectMappingPayloadBuilder(
-                        duck,
-                        new ObjectMapper())));
+        sendPostRequest(runner, yellowDuckService, "/api/duck/create",
+                MediaType.APPLICATION_JSON_VALUE, duck);
     }
 
     @Step("Удаление уточки /api/duck/delete")
     protected void duckDelete(TestCaseRunner runner, String id) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .delete("/api/duck/delete")
-                .queryParam("id", id)
-                .message());
+        sendDeleteRequest(runner, yellowDuckService, "/api/duck/delete" +
+                generateQueryParametersString("id", id));
     }
 
     @Step("Изменение свойств уточки /api/duck/update")
     protected void duckUpdate(TestCaseRunner runner, String id,
                            String color, String height, String material, String sound, String wingsState ) {
-        runner.$(http().client(yellowDuckService)
-                .send()
-                .put("/api/duck/update")
-                .message()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .queryParam("color", color)
-                .queryParam("height", height)
-                .queryParam("id", id)
-                .queryParam("material", material)
-                .queryParam("sound", sound)
-                .queryParam("wingsState", wingsState));
+        sendPutRequest(runner, yellowDuckService, "/api/duck/update" +
+                generateQueryParametersString(
+                        "color", color,
+                        "height", height,
+                        "id", id,
+                        "material", material,
+                        "sound", sound,
+                        "wingsState", wingsState
+                ), MediaType.APPLICATION_JSON_VALUE, null);
     }
-
     //endregion
 
-
-    /**
-     * Провести валидацию ответа по указанным коду ответа и телу сообщения.
-     */
     @Step("Валидация ответа по строке {responseMessage}")
     protected void validateResponse(TestCaseRunner runner, HttpStatus status, String responseMessage) {
-        runner.$(http().client(yellowDuckService)
-                .receive()
-                .response(status)
-                .message()
-                .body(responseMessage));
+        receiveResponseAndValidate(runner, yellowDuckService, status, responseMessage);
     }
 
     @Step("Валидация ответа по payload")
     protected void validateResponseWithPayload(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
-        runner.$(http().client(yellowDuckService)
-                .receive()
-                .response(status)
-                .message()
-                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper())));
+        receiveResponseAndValidateWithPayload(runner, yellowDuckService, status, expectedPayload);
     }
 
     @Step("Валидация ответа по ресурсу {expectedPayload}")
-    protected void validateResponseWithResource(TestCaseRunner runner, HttpStatus status, String expectedPayload) {
-        runner.$(http().client(yellowDuckService)
-                .receive()
-                .response(status)
-                .message()
-                .body(new ClassPathResource(expectedPayload)));
+    protected void validateResponseWithResource(TestCaseRunner runner, HttpStatus status, String resourcePath) {
+        receiveResponseAndValidateWithResource(runner, yellowDuckService, status, resourcePath);
     }
 
     @Step("Проверить свойства уточки в базе данных")
     protected void validateDuckPropertiesInDatabase(TestCaseRunner runner, Duck expectedPayload) {
-        runner.$(query(yellowDuckDb).statement("select * from DUCK where ID = '${" + duckIdVar + "}'")
-                .validate("COLOR", expectedPayload.color())
-                .validate("HEIGHT", Double.toString(expectedPayload.height()))
-                .validate("MATERIAL", expectedPayload.material())
-                .validate("SOUND", expectedPayload.sound())
-                .validate("WINGS_STATE", expectedPayload.wingsState().toString())
-        );
+        sendDatabaseQueryAndValidate(runner, yellowDuckDb,
+                "select * from DUCK where ID = '${" + duckIdVar + "}'",
+                "COLOR", expectedPayload.color(),
+                "HEIGHT", Double.toString(expectedPayload.height()),
+                "MATERIAL", expectedPayload.material(),
+                "SOUND", expectedPayload.sound(),
+                "WINGS_STATE", expectedPayload.wingsState().toString()
+                );
     }
 
     @Step("Проверить, удалена ли уточка из базы данных")
     protected void validateDuckDeletedFromDatabase(TestCaseRunner runner) {
-        runner.$(query(yellowDuckDb).statement(
-                "select COUNT(ID) as FOUND from DUCK where ID = '${" + duckIdVar + "}'")
-                .validate("FOUND", "0")
-        );
+        sendDatabaseQueryAndValidate(runner, yellowDuckDb,
+                "select COUNT(ID) as FOUND from DUCK where ID = '${" + duckIdVar + "}'",
+                "FOUND", "0");
     }
-    /**
-     * Провести валидацию ответа по указанным коду ответа и телу сообщения и занести id в тестовую переменную
-     */
-    @Step("Проверить успешность создания уточки и записать ее id в тестовую переменную")
+
+    @Step("Проверить успешность создания уточки и записать ее id в тестовую переменную ")
     protected void validateDuckCreation(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
-        runner.$(http().client(yellowDuckService)
-                .receive()
-                .response(status)
-                .message()
-                .extract(fromBody().expression("$.id", duckIdVar))
-                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper())));
+        receiveResponseAndValidateWithPayloadAndExtract(runner, yellowDuckService, status, expectedPayload,
+                "$.id", duckIdVar);
     }
 }
