@@ -90,7 +90,6 @@ public class DuckCreateTest extends DuckActionsTest {
                                              String sound, Duck.WingsState wingsState,
                                              @Optional @CitrusResource TestCaseRunner runner) {
         Duck duckProperties = new Duck()
-                .id("@ignore@")
                 .color(color)
                 .height(height)
                 .material(material)
