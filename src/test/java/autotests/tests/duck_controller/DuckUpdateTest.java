@@ -53,7 +53,12 @@ public class DuckUpdateTest extends DuckActionsTest {
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckPropertiesInDatabase(runner, defaultDuckProperties);
+        validateDuckPropertiesInDatabase(runner,
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
     }
 
     @Test(description = "Проверить редактирование цвета и звука уточки")
@@ -92,6 +97,11 @@ public class DuckUpdateTest extends DuckActionsTest {
                         "  \"" + "message" + "\": \"Duck with id = " + duckIdVar + " is updated\"\n" +
                         "}");
 
-        validateDuckPropertiesInDatabase(runner, defaultDuckProperties);
+        validateDuckPropertiesInDatabase(runner,
+                defaultDuckProperties.color(),
+                String.valueOf(defaultDuckProperties.height()),
+                defaultDuckProperties.material(),
+                defaultDuckProperties.sound(),
+                String.valueOf(defaultDuckProperties.wingsState()));
     }
 }
