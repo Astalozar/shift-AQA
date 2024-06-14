@@ -2,6 +2,7 @@ package autotests;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -93,63 +94,43 @@ public class BaseTest  extends TestNGCitrusSpringSupport {
 
     protected void receiveResponseAndValidate(TestCaseRunner runner,
                                               HttpClient client, HttpStatus status,
-                                              String responseMessage) {
+                                              String responseMessage,
+                                              String path, String variable) {
         runner.$(http().client(client)
                 .receive()
                 .response(status)
                 .message()
-                .body(responseMessage));
+                .type(MessageType.JSON)
+                .body(responseMessage)
+                .extract(fromBody().expression(path, variable)));
     }
 
 
     protected void receiveResponseAndValidateWithPayload(TestCaseRunner runner,
-                                                             HttpClient client, HttpStatus status,
-                                                             Object expectedPayload,
-                                                             String... extractParameters) {
-        var builder = http().client(client)
+                                                         HttpClient client, HttpStatus status,
+                                                         Object expectedPayload,
+                                                         String path, String variable) {
+        runner.$(http().client(client)
                 .receive()
                 .response(status)
-                .message();
-
-        String parameterName = null;
-        for (var parameter : extractParameters) {
-            if(parameterName == null) {
-                parameterName = parameter;
-            } else {
-                builder.extract(fromBody().expression(parameterName, parameter));
-                parameterName = null;
-            }
-        }
-
-        if(expectedPayload != null) {
-            builder.body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper()));
-        }
-        runner.$(builder);
+                .message()
+                .type(MessageType.JSON)
+                .body(new ObjectMappingPayloadBuilder(expectedPayload, new ObjectMapper()))
+                .extract(fromBody().expression(path, variable)));
     }
 
     protected void receiveResponseAndValidateWithResource(TestCaseRunner runner,
                                                           HttpClient client, HttpStatus status,
                                                           String resourcePath,
-                                                          String... extractParameters) {
-        var builder = http().client(client)
+                                                          String path, String variable) {
+        runner.$(http().client(client)
                 .receive()
                 .response(status)
-                .message();
-
-        String parameterName = null;
-        for (var parameter : extractParameters) {
-            if(parameterName == null) {
-                parameterName = parameter;
-            } else {
-                builder.extract(fromBody().expression(parameterName, parameter));
-                parameterName = null;
-            }
-        }
-
-        if(resourcePath != null) {
-            builder.body(new ClassPathResource(resourcePath));
-        }
-        runner.$(builder);
+                .message()
+                .type(MessageType.JSON)
+                .body(new ClassPathResource(resourcePath))
+                .extract(fromBody().expression(path, variable)
+        ));
     }
 
 
@@ -170,23 +151,15 @@ public class BaseTest  extends TestNGCitrusSpringSupport {
         }
 
         runner.$(newQuery);
+
+
     }
 
     protected void sendDatabaseQueryAndExtract(TestCaseRunner runner, SingleConnectionDataSource dataSource,
-                                               String statement, String... parameters) {
-        var newQuery = query(dataSource).statement(statement);
-        String parameterName = null;
-
-        for (var parameter : parameters) {
-            if (parameterName == null) {
-                parameterName = parameter;
-            } else {
-                newQuery.extract(parameterName, parameter);
-                parameterName = null;
-            }
-        }
-
-        runner.$(newQuery);
+                                               String statement,
+                                               String path, String variable) {
+        runner.$(query(dataSource).statement(statement)
+                .extract(path, variable));
     }
     protected void sendDatabaseRequest(TestCaseRunner runner, SingleConnectionDataSource dataSource,
                                                 String statement) {

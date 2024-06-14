@@ -10,6 +10,7 @@ import io.qameta.allure.Step;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.validation.DelegatingPayloadVariableExtractor.Builder.fromBody;
 
@@ -145,29 +146,31 @@ public class DuckActionsTest extends BaseTest {
 
     @Step("Валидация ответа по строке {responseMessage}")
     protected void validateResponse(TestCaseRunner runner, HttpStatus status, String responseMessage) {
-        receiveResponseAndValidate(runner, yellowDuckService, status, responseMessage);
+        receiveResponseAndValidate(runner, yellowDuckService, status, responseMessage, "$", "_");
     }
 
     @Step("Валидация ответа по payload")
     protected void validateResponseWithPayload(TestCaseRunner runner, HttpStatus status, Object expectedPayload) {
-        receiveResponseAndValidateWithPayload(runner, yellowDuckService, status, expectedPayload);
+        receiveResponseAndValidateWithPayload(runner, yellowDuckService, status, expectedPayload, "$", "_");
     }
 
     @Step("Валидация ответа по ресурсу {expectedPayload}")
     protected void validateResponseWithResource(TestCaseRunner runner, HttpStatus status, String resourcePath) {
-        receiveResponseAndValidateWithResource(runner, yellowDuckService, status, resourcePath);
+        receiveResponseAndValidateWithResource(runner, yellowDuckService, status, resourcePath, "$", "var");
     }
 
     @Step("Проверить свойства уточки в базе данных")
-    protected void validateDuckPropertiesInDatabase(TestCaseRunner runner, Duck expectedPayload) {
-        sendDatabaseQueryAndValidate(runner, yellowDuckDb,
-                "select * from DUCK where ID = '${" + duckIdVar + "}'",
-                "COLOR", expectedPayload.color(),
-                "HEIGHT", Double.toString(expectedPayload.height()),
-                "MATERIAL", expectedPayload.material(),
-                "SOUND", expectedPayload.sound(),
-                "WINGS_STATE", expectedPayload.wingsState().toString()
-                );
+    protected void validateDuckPropertiesInDatabase(TestCaseRunner runner,
+                                                    String color, String height, String material,
+                                                    String sound, String wingsState) {
+        runner.$(query(yellowDuckDb)
+                .statement("select * from DUCK where ID = '${" + duckIdVar + "}'")
+                .validate("COLOR", color)
+                .validate("HEIGHT", height)
+                .validate("MATERIAL", material)
+                .validate("SOUND", sound)
+                .validate("WINGS_STATE", wingsState)
+        );
     }
 
     @Step("Проверить, удалена ли уточка из базы данных")

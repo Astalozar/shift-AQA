@@ -38,7 +38,12 @@ public class DuckCreateTest extends DuckActionsTest {
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
-        validateDuckPropertiesInDatabase(runner, duckProperties);
+        validateDuckPropertiesInDatabase(runner,
+                duckProperties.color(),
+                String.valueOf(duckProperties.height()),
+                duckProperties.material(),
+                duckProperties.sound(),
+                String.valueOf(duckProperties.wingsState()));
     }
 
     @Test(description = "Проверить создание деревянной уточки")
@@ -61,7 +66,13 @@ public class DuckCreateTest extends DuckActionsTest {
         duckProperties.id("@ignore@");
 
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
-        validateDuckPropertiesInDatabase(runner, duckProperties);
+        validateDuckCreation(runner, HttpStatus.OK, duckProperties);
+        validateDuckPropertiesInDatabase(runner,
+                duckProperties.color(),
+                String.valueOf(duckProperties.height()),
+                duckProperties.material(),
+                duckProperties.sound(),
+                String.valueOf(duckProperties.wingsState()));
     }
 
     @DataProvider
@@ -79,6 +90,7 @@ public class DuckCreateTest extends DuckActionsTest {
                                              String sound, Duck.WingsState wingsState,
                                              @Optional @CitrusResource TestCaseRunner runner) {
         Duck duckProperties = new Duck()
+                .id("@ignore@")
                 .color(color)
                 .height(height)
                 .material(material)
@@ -87,10 +99,13 @@ public class DuckCreateTest extends DuckActionsTest {
 
         duckCreate(runner, duckProperties);
 
-        duckProperties.id("@ignore@");
-
         validateDuckCreation(runner, HttpStatus.OK, duckProperties);
-        validateDuckPropertiesInDatabase(runner, duckProperties);
+        validateDuckPropertiesInDatabase(runner,
+                duckProperties.color(),
+                String.valueOf(duckProperties.height()),
+                duckProperties.material(),
+                duckProperties.sound(),
+                String.valueOf(duckProperties.wingsState()));
     }
 
 
@@ -121,6 +136,11 @@ public class DuckCreateTest extends DuckActionsTest {
         receiveResponseAndValidateWithResource(runner, yellowDuckService, HttpStatus.OK, response,
                 "$.id", duckIdVar);
 
-        validateDuckPropertiesInDatabase(runner, payload);
+        validateDuckPropertiesInDatabase(runner,
+                payload.color(),
+                String.valueOf(payload.height()),
+                payload.material(),
+                payload.sound(),
+                String.valueOf(payload.wingsState()));
     }
 }
